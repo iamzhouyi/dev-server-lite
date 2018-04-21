@@ -1,12 +1,19 @@
 {
   "name": "dev-server-lite",
   "version": "1.0.0",
-  "description": "",
+  "description": "Static http server with configurable proxy rules",
   "main": "index.js",
-  "scripts": {
-    "dev": "nodemon index.js"
+  "bin": {
+    "dev-server": "./index.js"
   },
-  "author": "ZhouYi",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iamzhouyi/dev-server-lite.git"
+  },
+  "author": "Zhou Yi",
   "license": "MIT",
   "dependencies": {
     "finalhandler": "^1.1.1",

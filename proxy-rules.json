@@ -1,0 +1,12 @@
+{
+    "proxyOptions": {
+        "changeOrigin": true,
+        "ws": true
+    },
+    
+    "rules": {
+        "/api": "http://127.0.0.1/api"
+    },
+
+    "port": 2000
+}
