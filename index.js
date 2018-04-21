@@ -8,8 +8,8 @@ var HttpProxyRules = require('http-proxy-rules')
 var fs = require('fs');
 var path = require('path');
 
-var { root } = getCmdLineArgv()
-var configFilePath = './proxy-rules.json'
+var { root, config } = getCmdLineArgv()
+var configFilePath = config //path.resolve(process.cwd(), 'proxy-rules.json')
 
 var defaultProxyOptions = { changeOrigin: true, ws: false}
 var defaultRules = {}
@@ -31,10 +31,15 @@ var proxyRules = new HttpProxyRules({
 // For options see https://github.com/nodejitsu/node-http-proxy
 var proxyOptions = Object.assign({}, defaultProxyOptions, userProxyOptions)
 
+console.log('proxy-rules.json', configFilePath)
 console.log('proxyRules', proxyRules)
 console.log('proxyOptions', proxyOptions)
 
 var proxy = httpProxy.createProxy(proxyOptions);
+proxy.on('error', function(err, req, res) {
+    res.writeHead(500);
+    res.end('something wrong from target server:  ' + err.toString());
+});
 
 // Serve static resource
 var serve = serveStatic(root, {'index': ['index.html', 'index.htm']})
@@ -50,19 +55,21 @@ var server = http.createServer(function onRequest (req, res) {
     serve(req, res, finalhandler(req, res))
 })
 
-console.log('dev-server started port=' + port + ', root=' + root)
 server.listen(port)
-
+console.log('dev-server started port=' + port + ', root=' + root)
 
 function getCmdLineArgv() {
-    var config = {
-        root: './'
+    var args = {
+        root: './',
+        config: './proxy-rules.json'
     }
     var argvs = process.argv
     for (let i = 0; i< argvs.length ; i++) {
         if(argvs[i] === '--root'){
-            config.root = argvs[i+1]
+            args.root = argvs[i+1]
+        }else if(argvs[i] === '--config'){
+            args.config = argvs[i+1]
         }
     }
-    return config;
+    return args;
 }
