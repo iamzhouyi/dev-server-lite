@@ -8,19 +8,18 @@ var HttpProxyRules = require('http-proxy-rules')
 var fs = require('fs');
 var path = require('path');
 
-var { root, config } = getCmdLineArgv()
+var { root, config, port } = getCmdLineArgv()
 var configFilePath = config //path.resolve(process.cwd(), 'proxy-rules.json')
 
 var defaultProxyOptions = { changeOrigin: true, ws: false}
 var defaultRules = {}
 
-let userProxyOptions = {}, userRules = {}, port = 3000
+let userProxyOptions = {}, userRules = {}
 
 if (fs.existsSync(configFilePath)){
     var config = JSON.parse(fs.readFileSync(configFilePath, 'utf8'));
     userProxyOptions = config.proxyOptions || {}
     userRules = config.rules || {}
-    port = config.port || 3000
 }
 
 // For rules see https://github.com/donasaur/http-proxy-rules
@@ -61,7 +60,8 @@ console.log('dev-server started port=' + port + ', root=' + root)
 function getCmdLineArgv() {
     var args = {
         root: './',
-        config: './proxy-rules.json'
+        config: './proxy-rules.json',
+        port: 3000,
     }
     var argvs = process.argv
     for (let i = 0; i< argvs.length ; i++) {
@@ -69,6 +69,8 @@ function getCmdLineArgv() {
             args.root = argvs[i+1]
         }else if(argvs[i] === '--config'){
             args.config = argvs[i+1]
+        }else if(argvs[i] === '--port'){
+            args.port = argvs[i+1]
         }
     }
     return args;

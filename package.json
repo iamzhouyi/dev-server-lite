@@ -1,6 +1,6 @@
 {
   "name": "dev-server-lite",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Static http server with configurable proxy rules",
   "main": "index.js",
   "bin": {
